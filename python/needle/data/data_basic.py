@@ -59,21 +59,19 @@ class DataLoader:
                                            range(batch_size, len(dataset), batch_size))
 
     def __iter__(self):
-        ### BEGIN YOUR SOLUTION
+
         if self.shuffle:
             self.ordering = np.array_split(np.random.permutation(len(self.dataset)), 
                                            range(self.batch_size, len(self.dataset), self.batch_size))
         self.cur_idx = 0
-        ### END YOUR SOLUTION
+
         return self
 
     def __next__(self):
-        ### BEGIN YOUR SOLUTION
+
         if self.cur_idx >= len(self.ordering):
             raise StopIteration 
         #! It's necessary to check whether the iteration is finished 
         samples = self.dataset[self.ordering[self.cur_idx]]
         self.cur_idx += 1        
         return [Tensor(x) for x in samples]
-        ### END YOUR SOLUTION
-

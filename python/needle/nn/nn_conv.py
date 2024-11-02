@@ -27,7 +27,6 @@ class Conv(Module):
         self.kernel_size = kernel_size
         self.stride = stride
 
-        ### BEGIN YOUR SOLUTION
         self.padding = (kernel_size - 1) // 2 # to ensure padding=same given stride=1
         self.weight = Parameter(init.kaiming_uniform(
             fan_in=in_channels * kernel_size**2, 
@@ -46,10 +45,9 @@ class Conv(Module):
                 requires_grad=True))
         else:
             self.bias = None
-        ### END YOUR SOLUTION
 
     def forward(self, x: Tensor) -> Tensor:
-        ### BEGIN YOUR SOLUTION
+
         nhwc_x = x.transpose((1, 2)).transpose((2, 3))
         nhwc_output = ops.conv(nhwc_x, 
                                self.weight, 
@@ -58,7 +56,6 @@ class Conv(Module):
         if self.bias:
             nhwc_output += self.bias.reshape((1,1,1,self.out_channels)).broadcast_to(nhwc_output.shape)
         return nhwc_output.transpose((2, 3)).transpose((1, 2))
-        ### END YOUR SOLUTION
 
 class ConvBN(Module):
     '''

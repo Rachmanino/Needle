@@ -9,15 +9,12 @@ from ..backend_selection import array_api, BACKEND
 
 class LogSoftmax(TensorOp):
     def compute(self, Z):
-        ### BEGIN YOUR SOLUTION
+
         raise NotImplementedError()
-        ### END YOUR SOLUTION
 
     def gradient(self, out_grad, node):
-        ### BEGIN YOUR SOLUTION
-        raise NotImplementedError()
-        ### END YOUR SOLUTION
 
+        raise NotImplementedError()
 
 def logsoftmax(a):
     return LogSoftmax()(a)
@@ -28,15 +25,14 @@ class LogSumExp(TensorOp):
         self.axes = axes
 
     def compute(self, Z):
-        ### BEGIN YOUR SOLUTION
+
         if self.axes is None:
             Z = Z.reshape((Z.size, ))
             self.axes = 0
         return (Z - Z.max(axis=self.axes, keepdims=True).broadcast_to(Z.shape)).exp().sum(axis=self.axes).log() + Z.max(axis=self.axes)
-        ### END YOUR SOLUTION
 
     def gradient(self, out_grad, node):
-        ### BEGIN YOUR SOLUTION
+
         max_z = Tensor(node.inputs[0].realize_cached_data().max(
                         axis=self.axes, 
                         keepdims=True), device=out_grad.device).broadcast_to(node.inputs[0].shape) #! 防止数值溢出
@@ -54,8 +50,6 @@ class LogSumExp(TensorOp):
         out_grad = out_grad.reshape(new_shape).broadcast_to(node.inputs[0].shape)
         sum_exp_z = sum_exp_z.reshape(new_shape).broadcast_to(node.inputs[0].shape)
         return out_grad * exp_z / sum_exp_z
-        ### END YOUR SOLUTION
-
 
 def logsumexp(a, axes=None):
     return LogSumExp(axes=axes)(a)

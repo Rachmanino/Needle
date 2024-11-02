@@ -30,12 +30,9 @@ class ResNet9(ndl.nn.Module):
             nn.Linear(128, 128, device=device, dtype=dtype),
             nn.ReLU(),
             nn.Linear(128, 10, device=device, dtype=dtype))
-        ### END YOUR SOLUTION
-
+        
     def forward(self, x):
-        ### BEGIN YOUR SOLUTION
         return self.model(x)
-        ### END YOUR SOLUTION
 
 
 class LanguageModel(nn.Module):
@@ -52,7 +49,6 @@ class LanguageModel(nn.Module):
         num_layers: Number of layers in RNN or LSTM
         """
         super(LanguageModel, self).__init__()
-        ### BEGIN YOUR SOLUTION
         self.embedding = nn.Embedding(output_size, embedding_size, device=device, dtype=dtype)
         #!不能创建model的dict, 否则梯度无法回传会报错
         if seq_model == 'rnn':
@@ -68,8 +64,6 @@ class LanguageModel(nn.Module):
         else:
             raise NotImplementedError("seq_model should be 'rnn' or 'lstm'")
         
-        
-        
         self.num_layers = num_layers
         self.seq_model = seq_model
         self.embedding_size = embedding_size
@@ -77,7 +71,6 @@ class LanguageModel(nn.Module):
         self.hidden_size = hidden_size
         self.device = device
         self.dtype = dtype
-        ### END YOUR SOLUTION
 
     def forward(self, x, h=None):
         """
@@ -92,7 +85,6 @@ class LanguageModel(nn.Module):
         h of shape (num_layers, bs, hidden_size) if using RNN,
             else h is tuple of (h0, c0), each of shape (num_layers, bs, hidden_size)
         """
-        ### BEGIN YOUR SOLUTION
         seq_len, bs = x.shape
         x = self.embedding(x)
         # print(x.shape, seq_len, bs, self.hidden_size)
@@ -102,7 +94,6 @@ class LanguageModel(nn.Module):
         else:
             x = self.linear(x.reshape((seq_len*bs, self.hidden_size)))
         return x, h
-        ### END YOUR SOLUTION
 
 
 if __name__ == "__main__":

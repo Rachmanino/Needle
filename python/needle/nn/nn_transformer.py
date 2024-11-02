@@ -107,7 +107,6 @@ class MultiHeadAttention(Module):
         result = None
         probs = None
 
-        ### BEGIN YOUR SOLUTION
         logits = self.matmul(q, k) / (q_dim ** 0.5) 
         if self.causal:
             mask = Tensor(self.create_causal_mask(queries_len, keys_values_len, self.device),
@@ -117,7 +116,6 @@ class MultiHeadAttention(Module):
             logits = logits + mask
         probs = self.dropout(self.softmax(logits))
         result = self.matmul(probs, v.transpose())
-        ### END YOUR SOLUTION
 
         return result, probs
 
@@ -210,7 +208,6 @@ class AttentionLayer(Module):
         result = None
         # print(q.shape, k.shape, v.shape, self.num_head, self.dim_head, self.out_features)
 
-        ### BEGIN YOUR SOLUTION
         normalized_q = self.prenorm_q(q.reshape((batch_size*queries_len, q_dim)))
         Q = self.q_projection(normalized_q).reshape((batch_size, queries_len, self.num_head, self.dim_head))
         Q = Q.transpose((1, 2))
@@ -228,7 +225,6 @@ class AttentionLayer(Module):
         
         result = self.out_projection(X.reshape((batch_size*queries_len, self.num_head*self.dim_head)))
         result = result.reshape((batch_size, queries_len, self.out_features))
-        ### END YOUR SOLUTION
 
         return result
 
@@ -253,7 +249,6 @@ class TransformerLayer(Module):
         self.device = device
         self.dtype = dtype
 
-        ### BEGIN YOUR SOLUTION
         self.resblock1 = Sequential(
             AttentionLayer(q_features, 
                            num_head, 
@@ -273,8 +268,6 @@ class TransformerLayer(Module):
             Dropout(dropout),
         )
 
-        ### END YOUR SOLUTION
-
     def forward(
         self,
         x
@@ -287,11 +280,9 @@ class TransformerLayer(Module):
 
         batch_size, seq_len, x_dim = x.shape
 
-        ### BEGIN YOUR SOLUTION
         x = x + self.resblock1(x)
         x_  = self.norm(x.reshape((batch_size*seq_len, x_dim)))
         x = x + self.mlp(x_).reshape((batch_size, seq_len, x_dim))
-        ### END YOUR SOLUTION
 
         return x
 
@@ -320,7 +311,6 @@ class Transformer(Module):
         self.dtype = dtype
         self.batch_first = batch_first
 
-        ### BEGIN YOUR SOLUTION
         self.sequence_len = sequence_len
         self.position_embedding = Embedding(sequence_len, 
                                    embedding_size, 
@@ -338,7 +328,6 @@ class Transformer(Module):
                 dtype=dtype,
             ) for _ in range(num_layers)
         ])
-        ### END YOUR SOLUTION
 
     def forward(
         self,
@@ -348,7 +337,6 @@ class Transformer(Module):
         if not self.batch_first:
             x = ops.transpose(x, axes=(0, 1))
 
-        ### BEGIN YOUR SOLUTION
         b, l, d = x.shape
         pos = np.arange(l).reshape(l, 1)
         pos = ndarray.array(pos, device=self.device)
@@ -359,7 +347,6 @@ class Transformer(Module):
         pos = pos.transpose(axes=(0, 1))
         x = x + pos
         x = self.transformer_layers(x)
-        ### END YOUR SOLUTION
 
         if not self.batch_first:
             x = ops.transpose(x, axes=(0, 1))

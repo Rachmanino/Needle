@@ -21,7 +21,7 @@ class CIFAR10Dataset(Dataset):
         X - numpy array of images
         y - numpy array of labels
         """
-        ### BEGIN YOUR SOLUTION
+
         imgs, labels = [], []
         if train: # load training dataset
             filenames = [f'data_batch_{i}' for i in range(1, 6)]
@@ -39,25 +39,22 @@ class CIFAR10Dataset(Dataset):
         # print(self.X.shape, self.y.shape)
         self.p = p
         self.transforms = transforms
-        ### END YOUR SOLUTION
 
     def __getitem__(self, index) -> object:
         """
         Returns the image, label at given index
         Image should be of shape (3, 32, 32)
         """
-        ### BEGIN YOUR SOLUTION
+
         if self.transforms is not None:
             imgs = [self.transforms(img) for img in self.X[index]]
         else:
             imgs = self.X[index]
         return imgs, self.y[index]
-        ### END YOUR SOLUTION
 
     def __len__(self) -> int:
         """
         Returns the total number of examples in the dataset
         """
-        ### BEGIN YOUR SOLUTION
+
         return len(self.X)
-        ### END YOUR SOLUTION

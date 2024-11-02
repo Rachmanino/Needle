@@ -246,14 +246,12 @@ class NDArray:
             NDArray : reshaped array; this will point to thep
         """
 
-        ### BEGIN YOUR SOLUTION
         if prod(self.shape) != prod(new_shape):
             raise ValueError("Product of current shape is not equal to the product of the new shape")
         if not self.is_compact():
             raise ValueError("The matrix is not compact")
         # print(new_shape, new_stride)
         return self.as_strided(new_shape, self.compact_strides(new_shape))
-        ### END YOUR SOLUTION
 
     def permute(self, new_axes):
         """
@@ -276,11 +274,9 @@ class NDArray:
             strides changed).
         """
 
-        ### BEGIN YOUR SOLUTION
         new_shape = tuple([self.shape[i] for i in new_axes])
         new_strides = tuple([self.strides[i] for i in new_axes])
         return self.as_strided(new_shape, new_strides)
-        ### END YOUR SOLUTION
 
     def broadcast_to(self, new_shape):
         """
@@ -302,7 +298,6 @@ class NDArray:
             point to the same memory as the original array.
         """
 
-        ### BEGIN YOUR SOLUTION
         assert len(new_shape) == len(self.shape)
         new_strides = []
         for i in range(len(self.shape)):
@@ -313,7 +308,6 @@ class NDArray:
                 new_strides.append(self.strides[i])
         new_strides = tuple(new_strides)
         return self.as_strided(new_shape, new_strides)
-        ### END YOUR SOLUTION
 
     ### Get and set elements
 
@@ -378,7 +372,6 @@ class NDArray:
         )
         assert len(idxs) == self.ndim, "Need indexes equal to number of dimensions"
 
-        ### BEGIN YOUR SOLUTION
         offset = 0
         for i in range(len(self.shape)):
             offset += idxs[i].start * self.strides[i]
@@ -389,7 +382,6 @@ class NDArray:
                             device=self.device, 
                             handle=self._handle, 
                             offset=offset)
-        ### END YOUR SOLUTION
 
     def __setitem__(self, idxs, other):
         """Set the values of a view into an array, using the same semantics
@@ -597,7 +589,7 @@ class NDArray:
         Flip this ndarray along the specified axes.
         Note: compact() before returning.
         """
-        ### BEGIN YOUR SOLUTION
+
         new_strides = list(self.strides)
         new_offset = 0
         for axis in axes:
@@ -610,7 +602,6 @@ class NDArray:
                             device=self.device,
                             handle=self._handle,
                             offset=new_offset).compact()
-        ### END YOUR SOLUTION
 
     def pad(self, axes):
         """
@@ -618,7 +609,7 @@ class NDArray:
         which lists for _all_ axes the left and right padding amount, e.g.,
         axes = ( (0, 0), (1, 1), (0, 0)) pads the middle axis with a 0 on the left and right side.
         """
-        ### BEGIN YOUR SOLUTION
+
         new_shape, slices = [], []
         for i, (size1, size2) in enumerate(axes):
             assert size1 >= 0 and size2 >= 0
@@ -628,7 +619,6 @@ class NDArray:
         out = self.device.full(new_shape, 0) #! 一定要注意make初始化不一定是0的
         out[slices] = self
         return out 
-        ### END YOUR SOLUTION
 
 def array(a, dtype="float32", device=None):
     """Convenience methods to match numpy a bit more closely."""

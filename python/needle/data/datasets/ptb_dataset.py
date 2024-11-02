@@ -25,21 +25,17 @@ class Dictionary(object):
         and appends to the list of words.
         Returns the word's unique ID.
         """
-        ### BEGIN YOUR SOLUTION
+
         self.word2idx[word] = self.size
         self.idx2word.append(word)
         self.size += 1
-        ### END YOUR SOLUTION
 
     def __len__(self):
         """
         Returns the number of unique words in the dictionary.
         """
-        ### BEGIN YOUR SOLUTION
+
         return self.size
-        ### END YOUR SOLUTION
-
-
 
 class Corpus(object):
     """
@@ -62,7 +58,7 @@ class Corpus(object):
         Output:
         ids: List of ids
         """
-        ### BEGIN YOUR SOLUTION
+
         with open(path, 'r') as f:
             ids = []
             for i, line in enumerate(f):
@@ -74,8 +70,6 @@ class Corpus(object):
                         self.dictionary.add_word(word)
                     ids.append(self.dictionary.word2idx[word])
         return ids
-        ### END YOUR SOLUTION
-
 
 def batchify(data, batch_size, device, dtype):
     """
@@ -93,12 +87,10 @@ def batchify(data, batch_size, device, dtype):
     If the data cannot be evenly divided by the batch size, trim off the remainder.
     Returns the data as a numpy array of shape (nbatch, batch_size).
     """
-    ### BEGIN YOUR SOLUTION
+
     n_batch =  len(data) // batch_size
     data = data[:n_batch * batch_size]
     return np.array(data, dtype=dtype).reshape(batch_size, n_batch).T
-    ### END YOUR SOLUTION
-
 
 def get_batch(batches, i, bptt, device=None, dtype=None):
     """
@@ -119,11 +111,10 @@ def get_batch(batches, i, bptt, device=None, dtype=None):
     data - Tensor of shape (bptt, bs) with cached data as NDArray
     target - Tensor of shape (bptt*bs,) with cached data as NDArray
     """
-    ### BEGIN YOUR SOLUTION
+
     bptt = min(bptt, len(batches) - 1 - i) # avoid index out of bounds
     data = batches[i:i+bptt]
     target = batches[i+1:i+1+bptt]
     data = Tensor(data, device=device, dtype=dtype)
     target = Tensor(target.reshape(-1), device=device, dtype=dtype)
     return data, target
-    ### END YOUR SOLUTION
